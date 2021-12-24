@@ -1,0 +1,47 @@
+[
+  {
+    "id": "sitelink",
+    "type": "inputstring",
+    "name": "Site Link",
+    "value": "https://www.limetorrents.info/"
+  },
+  {
+    "id": "cookieheader",
+    "type": "hiddendata",
+    "name": "CookieHeader",
+    "value": "__cfduid=df41006b1cf5e7734dd05c2e7857a9e4f1605284947; PHPSESSID=jnps4oq2um5m9ek4sencls2ih5; __cf_bm=5298b0df9aa5cd22303754e9e0573fee74ab3b64-1608008873-1800-Act3xxu1Z7vv01S5nuoSUUk61S4RuxPqSdVd95BJ3WIA"
+  },
+  {
+    "id": "lasterror",
+    "type": "hiddendata",
+    "name": "LastError",
+    "value": ""
+  },
+  {
+    "id": "downloadlink",
+    "type": "inputselect",
+    "name": "Download link",
+    "value": "magnet:",
+    "options": {
+      "http://itorrents.org/": "iTorrents.org",
+      "magnet:": "magnet"
+    }
+  },
+  {
+    "id": "sortrequestedfromsite",
+    "type": "inputselect",
+    "name": "Sort requested from site",
+    "value": "date",
+    "options": {
+      "date": "created",
+      "seeds": "seeders",
+      "size": "size"
+    }
+  },
+  {
+    "id": "aboutlimetorrentscategories",
+    "type": "displayinfo",
+    "name": "About LimeTorrents Categories",
+    "value": "LimeTorrents only returns category <b>Other</b> in its <i>Keywordless</i> search results page.</br>To pass your apps' indexer TEST you will need to include the 8000(Other) category."
+  }
+]
