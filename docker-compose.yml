@@ -1,0 +1,167 @@
+services:
+  jackett:
+    container_name: jackett
+    environment:
+      AUTO_UPDATE: "true"
+      PGID: "1000"
+      PUID: "1000"
+      RUN_OPTS: <run options here>
+      TZ: America/New_York
+    image: ghcr.io/linuxserver/jackett
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      host_ip: ${IP_ADD}
+      target: 9117
+      published: 9117
+      protocol: tcp
+    restart: unless-stopped
+    volumes:
+    - type: bind
+      source: /HD/HD2/docker/jackett/config
+      target: /config
+      bind:
+        create_host_path: true
+    - type: bind
+      source: /HD/HD2/docker/vpn_transmission
+      target: /downloads
+      bind:
+        create_host_path: true
+  medusa:
+    container_name: medusa_docker
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: America/New_York
+    image: ghcr.io/linuxserver/medusa
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      host_ip: ${IP_ADD}
+      target: 8081
+      published: 9480
+      protocol: tcp
+    restart: unless-stopped
+    volumes:
+    - type: bind
+      source: /HD/HD2/docker/medusa_docker/config
+      target: /config
+      bind:
+        create_host_path: true
+    - type: bind
+      source: /HD/HD2/docker/medusa_docker/db_backup
+      target: /db_backup
+      bind:
+        create_host_path: true
+    - type: bind
+      source: /HD/HD1/tv
+      target: /tv
+      bind:
+        create_host_path: true
+    - type: bind
+      source: /HD/HD2/docker/vpn_transmission
+      target: /data
+      bind:
+        create_host_path: true
+  plex:
+    container_name: plex
+    environment:
+      PGID: "1000"
+      PLEX_CLAIM: ""
+      PUID: "1000"
+      UMASK_SET: "022"
+      VERSION: latest
+    image: plexinc/pms-docker:public
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+    - type: bind
+      source: /HD/HD2/docker/plex_data/config
+      target: /config
+      bind:
+        create_host_path: true
+    - type: bind
+      source: /HD/HD1/tv
+      target: /tv
+      bind:
+        create_host_path: true
+    - type: bind
+      source: /HD/HD1/movies
+      target: /movies
+      bind:
+        create_host_path: true
+  radarr:
+    container_name: radarr
+    environment:
+      PGID: "1000"
+      PUID: "1000"
+      TZ: america/New_York
+      UMASK_SET: "022"
+    image: ghcr.io/linuxserver/radarr
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      host_ip: ${IP_ADD}
+      target: 7878
+      published: 7878
+      protocol: tcp
+    restart: unless-stopped
+    volumes:
+    - type: bind
+      source: /HD/HD2/docker/radarr/config
+      target: /config
+      bind:
+        create_host_path: true
+    - type: bind
+      source: /HD/HD1/movies
+      target: /movies
+      bind:
+        create_host_path: true
+    - type: bind
+      source: /HD/HD2/docker/vpn_transmission
+      target: /data
+      bind:
+        create_host_path: true
+  transmission-openvpn:
+    container_name: transmission-openvpn
+    cap_add:
+    - NET_ADMIN
+    environment:
+      LOCAL_NETWORK: 192.168.0.0/16
+      OPENVPN_PASSWORD: pass
+      OPENVPN_PROVIDER: CUSTOM
+      OPENVPN_USERNAME: user
+      PGID: "1001"
+      PUID: "1000"
+      WEBPROXY_ENABLED: "false"
+    image: haugene/transmission-openvpn
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      host_ip: ${IP_ADD}
+      target: 9091
+      published: 9091
+      protocol: tcp
+    restart: unless-stopped
+    volumes:
+    - type: bind
+      source: /HD/HD2/docker/vpn_transmission
+      target: /data
+      bind:
+        create_host_path: true
+    - type: bind
+      source: /HD/HD2/docker/vpn_transmission/openvpn
+      target: /etc/openvpn/custom
+      bind:
+        create_host_path: true
+networks:
+  default:
+    name: docker_files_default
